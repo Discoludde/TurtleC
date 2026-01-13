@@ -18,7 +18,6 @@ struct turtle{
     double facing;
 };
 
-
 /*Turtle initilizing at pos x,y facing north defined as 0 deg*/
 turtle* init(int x,int y)
 {
@@ -41,6 +40,11 @@ void rotate(turtle* t,double deg)
     t->facing += deg;
 }
 
+void setheading(turtle* t,double deg)
+{
+    t->facing = deg;
+}
+
 void freeturtle(turtle* t)
 {
     for(int i = 0;i<=HEIGHT;i++)
@@ -52,25 +56,82 @@ void freeturtle(turtle* t)
 
 void putbotline(turtle* t,int x, int y)
 {
-    t->matrix[y][x] = "-";
+    t->matrix[y][x] = "_";
+}
+void puttopline(turtle* t,int x,int y)
+{
+    t->matrix[y][x] = "‾";
 }
 
+void puthorline(turtle* t,int x,int y)
+{
+    t->matrix[y][x] = "―";
+}
 void putvertline(turtle* t,int x, int y)
 {
     t->matrix[y][x] = "|";
 }
 
-void putwhorizontalline(turtle* t, int x,int y)
+void putwdiagonalline(turtle* t, int x,int y)
 {
     t->matrix[y][x] = "\\";
 }
 
-void putehorizontalline(turtle* t, int x,int y)
+void putediagonalline(turtle* t, int x,int y)
 {
     t->matrix[y][x] = "/";
 }
 
-void drawline(turtle* t,int length)
+/*Applies Bresenham's Line algortihm to put down horizontal lines*/
+void bresenhams(turtle* t,int x0,int y0,int x1,int y1)
+{
+    int dx,dy,stepx,stepy,er,e2;
+    bool changey,changex;
+    dx = abs(x1-x0);
+    dy = -abs(y1-y0);
+    stepx = (x1>x0) ? 1 : -1;
+    stepy = (y1>y0) ? 1 : -1;
+    er = dx+dy;
+
+    
+    while(1){
+        changex,changey = false;
+        if(x0==x1 && y0==y1) 
+            break;
+
+        e2 = 2*er;
+        if(e2>=dy){
+            changex = true;
+            er += dy;
+            x0 += stepx;
+        }
+        if(e2<=dx){
+            changey = true;
+            er += dx;
+            y0 += stepy;
+        }
+        
+        if(changey && changex){
+            if(stepx *stepy == 1)
+                putediagonalline(t,x0,y0);
+            else
+                putwdiagonalline(t,x0,y0);
+        }
+        else if(changex)
+            if(stepy == 1)
+                puttopline(t,x0,y0);
+            else
+                putbotline(t,x0,y0);
+        else
+            putvertline(t,x0,y0); 
+    }
+    t->xpos=x1+stepx;
+    t->ypos=y1+stepy;
+
+}
+
+/*Puts line from turtle initial position to position which it faces with rounded length*/
+void forward(turtle* t,int length)
 {
     int x0 = t->xpos;
     int y0 = t->ypos;
@@ -78,10 +139,11 @@ void drawline(turtle* t,int length)
     int deltay = length*cos(t->facing*PI/180);
     int x1 = x0 + deltax;
     int y1 = y0 + deltay;
+
     if(deltay == 0){
         int step = (deltax <0) ? -1: 1;
         for(int x = x0;x != x1;x += step)
-            putbotline(t,x,y0);
+            puthorline(t,x,y0);
         
         t->xpos = x1;
         return;
@@ -94,8 +156,9 @@ void drawline(turtle* t,int length)
         t->ypos = y1;
         return;
     }
+    bresenhams(t,x0,y0,x1,y1);
 }
-
+/*Draws the ASCII board in the terminal*/
 void draw(turtle* t)
 {
     for(int i = HEIGHT;i>=0;i--){
@@ -108,11 +171,8 @@ void draw(turtle* t)
 void main()
 {
     turtle* t1 = init(10,10);
-    drawline(t1,10);
-    rotate(t1,90);
-    drawline(t1,5);
-    rotate(t1,-90);
-    drawline(t1,5);
+    rotate(t1,30);
+    forward(t1,10);
     draw(t1);
     freeturtle(t1);
 }

@@ -12,7 +12,7 @@
 
 typedef struct turtle turtle;
 struct turtle{
-    char*** matrix;
+    char** matrix;
     int xpos;
     int ypos;
     double facing;
@@ -26,11 +26,11 @@ turtle* init(int x,int y)
     t->xpos = x;
     t->ypos = y;
     t->facing = 0;
-    t->matrix = malloc((HEIGHT+1)*sizeof(char**));
+    t->matrix = malloc((HEIGHT+1)*sizeof(char*));
     for(int row = 0;row<=HEIGHT;row++){
-        t->matrix[row] = malloc((WIDTH+1)*sizeof(char*));
+        t->matrix[row] = malloc((WIDTH+1)*sizeof(char));
         for(int col = 0;col<=WIDTH;col++)
-            t->matrix[row][col] = " ";
+            t->matrix[row][col] = ' ';
     }
     return t;
 }
@@ -54,48 +54,50 @@ void freeturtle(turtle* t)
     free(t);
 }
 
-void putbotline(turtle* t,int x, int y)
-{
-    t->matrix[y][x] = "_";
-}
-void puttopline(turtle* t,int x,int y)
-{
-    t->matrix[y][x] = "‾";
-}
-
 void puthorline(turtle* t,int x,int y)
 {
-    t->matrix[y][x] = "―";
+    if (x<0 || x>WIDTH || y<0 || y>HEIGHT)
+        return;
+    t->matrix[y][x] = '-';
 }
 void putvertline(turtle* t,int x, int y)
 {
-    t->matrix[y][x] = "|";
+    if (x<0 || x>WIDTH || y<0 || y>HEIGHT) 
+        return;
+
+    t->matrix[y][x] = '|';
 }
 
 void putwdiagonalline(turtle* t, int x,int y)
 {
-    t->matrix[y][x] = "\\";
+    if (x<0 || x>WIDTH || y<0 || y>HEIGHT) 
+        return;
+
+    t->matrix[y][x] = '\\';
 }
 
 void putediagonalline(turtle* t, int x,int y)
 {
-    t->matrix[y][x] = "/";
+    if (x<0 || x>WIDTH || y<0 || y>HEIGHT)
+        return;
+
+    t->matrix[y][x] = '/';
 }
 
 /*Applies Bresenham's Line algortihm to put down horizontal lines*/
 void bresenhams(turtle* t,int x0,int y0,int x1,int y1)
 {
     int dx,dy,stepx,stepy,er,e2;
-    bool changey,changex;
+    bool changey, changex;
     dx = abs(x1-x0);
     dy = -abs(y1-y0);
     stepx = (x1>x0) ? 1 : -1;
     stepy = (y1>y0) ? 1 : -1;
     er = dx+dy;
 
-    
     while(1){
-        changex,changey = false;
+        changex = false;
+        changey = false;
         if(x0==x1 && y0==y1) 
             break;
 
@@ -118,15 +120,12 @@ void bresenhams(turtle* t,int x0,int y0,int x1,int y1)
                 putwdiagonalline(t,x0,y0);
         }
         else if(changex)
-            if(stepy == 1)
-                puttopline(t,x0,y0);
-            else
-                putbotline(t,x0,y0);
+            puthorline(t,x0,y0);
         else
             putvertline(t,x0,y0); 
     }
-    t->xpos=x1+stepx;
-    t->ypos=y1+stepy;
+    t->xpos=x1;
+    t->ypos=y1;
 
 }
 
@@ -135,8 +134,8 @@ void forward(turtle* t,int length)
 {
     int x0 = t->xpos;
     int y0 = t->ypos;
-    int deltax = length*sin(t->facing*PI/180);
-    int deltay = length*cos(t->facing*PI/180);
+    int deltax = (int)lround(length * sin(t->facing * PI/180));
+    int deltay = (int)lround(length * cos(t->facing * PI/180));
     int x1 = x0 + deltax;
     int y1 = y0 + deltay;
 
@@ -163,16 +162,21 @@ void draw(turtle* t)
 {
     for(int i = HEIGHT;i>=0;i--){
         for(int k = 0;k<=WIDTH;k++)
-            printf("%s",t->matrix[i][k]);
+            printf("%c",t->matrix[i][k]);
         
         printf("\n");
     }
 }
-void main()
+int main(void)
 {
-    turtle* t1 = init(10,10);
-    rotate(t1,30);
-    forward(t1,10);
+    turtle* t1 = init(20,20);
+    for (int i = 0; i < 9; i++) {
+    forward(t1,7);
+    rotate(t1,-140);
+    forward(t1,7);
+    rotate(t1,100);
+    }
     draw(t1);
     freeturtle(t1);
+    return 0;
 }

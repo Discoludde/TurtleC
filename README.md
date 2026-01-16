@@ -17,6 +17,15 @@ The code for this example can be found in the `main` function of the program.
 
 ---
 
+## Build & Run
+
+Compile the program using a C compiler such as `gcc`:
+
+```bash
+gcc -Wall -Wextra -std=c11 TurtleC.c -o turtle -lm
+
+---
+
 ## Bresenham’s Line Algorithm
 
 Bresenham’s Line Algorithm is an elegant and efficient way to draw straight lines in a discrete grid. The algorithm works by deciding whether it is preferable to step in the x- or y-direction based on which choice minimizes the distance to the ideal continuous line.
@@ -32,3 +41,9 @@ There are many possible improvements that could be made to this project. Some in
 - The program is currently not optimized beyond the choice of algorithms. Profiling and optimizing bottlenecks could significantly improve performance and reduce code size.
 - Moving from terminal-based ASCII graphics to rendering in an actual graphical window would be a natural next step.
 - Exploring a GPU-focused implementation for faster and more advanced rendering.
+
+---
+
+## Project Status
+
+This project is a learning and experimentation project and is still under active development.

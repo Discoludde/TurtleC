@@ -29,7 +29,7 @@ gcc -Wall -Wextra -std=c11 TurtleC.c -o turtle -lm
 
 ## Bresenham’s Line Algorithm
 
-Bresenham’s Line Algorithm is an elegant and efficient way to draw straight lines in a discrete grid. The algorithm works by deciding whether it is preferable to step in the x- or y-direction based on which choice minimizes the distance to the ideal continuous line.
+Bresenham’s Line Algorithm is an elegant and efficient way to draw straight lines in a discrete grid. The algorithm works by deciding whether it is preferable to step in the x- and/or y-direction based on which choice minimizes the distance to the ideal continuous line.
 
 One of the most interesting aspects of the algorithm is that it relies solely on simple integer arithmetic—using no division and minimal multiplication—which makes it extremely efficient and well-suited for low-level graphics programming.
 

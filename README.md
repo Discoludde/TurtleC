@@ -23,6 +23,7 @@ Compile the program using a C compiler such as `gcc`:
 
 ```bash
 gcc -Wall -Wextra -std=c11 TurtleC.c -o turtle -lm
+```
 
 ---
 

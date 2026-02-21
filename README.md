@@ -2,7 +2,7 @@
 
 This project was created to revive my C programming skills after not coding in C for a long time. It also serves as a foundation for building my own tools for drawing graphics directly in the terminal for future projects.
 
-In addition, the project explores the basics of graphics programming by implementing a version of **Bresenham’s Line Algorithm** to draw lines in a discrete ASCII environment.
+In addition, the project explores the basics of graphics programming by implementing a version of **Bresenham’s Line Algorithm** to draw lines in a discrete ASCII environment. **NO** LLM(AI) was used to create this project.
 
 ---
 
